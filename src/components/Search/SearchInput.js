@@ -21,9 +21,15 @@ export default function SearchInput({ $main }) {
     if (inputText.length === 0) {
       $inputContainer.removeChild($button);
       return;
+    } else {
     }
 
-    requestKeyword(inputText);
+    const keywordResult = async () => {
+      const result = await requestKeyword(inputText);
+      const keywordList = new AutoCompleteList({ $main, result, inputText });
+    };
+
+    keywordResult();
   };
 
   const handleRemove = () => {
@@ -35,6 +41,4 @@ export default function SearchInput({ $main }) {
 
   $inputContainer.appendChild($input);
   $main.appendChild($inputContainer);
-
-  const keywordResult = new AutoCompleteList({ $main });
 }
