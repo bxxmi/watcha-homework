@@ -1,7 +1,7 @@
 import styles from './SearchInput.module.css';
 import { requestKeyword } from '../../utils/api';
-
-let TIMER;
+import { debounce } from '../../utils/debounce';
+import AutoCompleteList from '../AutoCompleteList/AutoCompleteList';
 
 export default function SearchInput({ $main }) {
   const $inputContainer = document.createElement('div');
@@ -30,17 +30,11 @@ export default function SearchInput({ $main }) {
     $input.value = '';
   };
 
-  $input.addEventListener('input', (e) => {
-    if (TIMER) {
-      clearTimeout(TIMER);
-    }
-
-    TIMER = setTimeout(() => {
-      handleSearch(e);
-    }, 400);
-  });
+  $input.addEventListener('input', debounce(handleSearch, 400));
   $button.addEventListener('click', handleRemove);
 
   $inputContainer.appendChild($input);
   $main.appendChild($inputContainer);
+
+  const keywordResult = new AutoCompleteList({ $main });
 }
