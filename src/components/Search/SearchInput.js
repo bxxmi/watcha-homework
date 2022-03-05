@@ -21,12 +21,11 @@ export default function SearchInput({ $main }) {
     if (inputText.length === 0) {
       $inputContainer.removeChild($button);
       return;
-    } else {
     }
 
     const keywordResult = async () => {
       const result = await requestKeyword(inputText);
-      const keywordList = new AutoCompleteList({ $main, result, inputText });
+      new AutoCompleteList({ $main, result, inputText });
     };
 
     keywordResult();
