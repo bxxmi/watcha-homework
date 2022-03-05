@@ -1,6 +1,6 @@
 import styles from './Header.module.css';
 
-export default function Header({ $container }) {
+export default function Header({ $target }) {
   const $header = document.createElement('header');
   const $logoLink = document.createElement('a');
 
@@ -10,5 +10,5 @@ export default function Header({ $container }) {
   $logoLink.className = styles.logo;
 
   $header.appendChild($logoLink);
-  $container.appendChild($header);
+  $target.appendChild($header);
 }

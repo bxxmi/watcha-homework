@@ -8,6 +8,6 @@ export default function App({ $target }) {
 
   $target.appendChild($container);
 
-  const header = new Header({ $container });
-  const input = new SearchContent({ $container });
+  new Header({ $target: $container });
+  new SearchContent({ $target: $container });
 }

@@ -1,7 +1,7 @@
 import AutoCompleteItem from './AutoCompleteItem';
 import styles from './AutoCompleteList.module.css';
 
-export default function AutoCompleteList({ $main, result, inputText }) {
+export default function AutoCompleteList({ $target, result, inputText }) {
   const $list = document.createElement('ul');
   $list.className = styles.list_container;
 
@@ -37,5 +37,5 @@ export default function AutoCompleteList({ $main, result, inputText }) {
 
   document.addEventListener('keydown', handleFocus);
 
-  $main.appendChild($list);
+  $target.appendChild($list);
 }

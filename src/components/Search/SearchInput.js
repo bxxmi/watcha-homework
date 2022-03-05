@@ -3,7 +3,7 @@ import { requestKeyword } from '../../utils/api';
 import { debounce } from '../../utils/debounce';
 import AutoCompleteList from '../AutoCompleteList/AutoCompleteList';
 
-export default function SearchInput({ $main }) {
+export default function SearchInput({ $target }) {
   const $inputContainer = document.createElement('div');
   const $input = document.createElement('input');
   const $button = document.createElement('button');
@@ -25,7 +25,7 @@ export default function SearchInput({ $main }) {
 
     const keywordResult = async () => {
       const result = await requestKeyword(inputText);
-      new AutoCompleteList({ $main, result, inputText });
+      new AutoCompleteList({ $target, result, inputText });
     };
 
     keywordResult();
@@ -39,5 +39,5 @@ export default function SearchInput({ $main }) {
   $button.addEventListener('click', handleRemove);
 
   $inputContainer.appendChild($input);
-  $main.appendChild($inputContainer);
+  $target.appendChild($inputContainer);
 }
