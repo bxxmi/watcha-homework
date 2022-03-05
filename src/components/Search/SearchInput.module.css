@@ -1,6 +1,7 @@
 .input_container {
   padding: 0 42px;
   position: relative;
+  margin-bottom: 10px;
 }
 
 .input_container > input {
