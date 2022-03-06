@@ -1,42 +1,71 @@
 import styles from './SearchInput.module.css';
 import { requestKeyword } from '../../utils/api';
 import { debounce } from '../../utils/debounce';
-import AutoCompleteList from '../AutoCompleteList/AutoCompleteList';
 
 export default function SearchInput({ $target }) {
   const $inputContainer = document.createElement('div');
   const $input = document.createElement('input');
   const $button = document.createElement('button');
+  const keywordList = document.createElement('ul');
 
+  keywordList.className = styles.list_container;
   $inputContainer.className = styles.input_container;
 
   $input.type = 'text';
   $input.placeholder = '제목, 감독, 배우로 검색';
   $button.innerText = '지우기';
 
-  const handleSearch = (e) => {
-    const inputText = e.target.value;
-    $inputContainer.appendChild($button);
+  $input.addEventListener('keyup', (e) => handleInput(e));
+  $input.addEventListener('keydown', (e) => handleFocus(e));
 
-    if (inputText.length === 0) {
+  const handleInput = (e) => {
+    if (
+      e.key === 'ArrowDown' ||
+      e.key === 'ArrowUp' ||
+      e.key === 'ArrowLeft' ||
+      e.key === 'ArrowRight' ||
+      e.key === 'CapsLock'
+    ) {
+      return;
+    } else {
+      const inputText = e.target.value;
+      handleRequest(inputText);
+
+      $inputContainer.appendChild($button);
+
+      $button.addEventListener('click', () => {
+        $input.value = '';
+        keywordList.innerHTML = '';
+      });
+    }
+  };
+
+  // fetch 요청
+  const handleRequest = debounce(async (keyword) => {
+    if (!keyword) {
       $inputContainer.removeChild($button);
+      keywordList.innerHTML = '';
       return;
     }
 
-    const keywordResult = async () => {
-      const result = await requestKeyword(inputText);
-      new AutoCompleteList({ $target, result, inputText });
-    };
+    const result = await requestKeyword(keyword);
+    console.log(result);
+    handleAutoComplete(result);
+  }, 400);
 
-    keywordResult();
+  // 추천 검색어 함수
+  const handleAutoComplete = (list) => {
+    keywordList.innerHTML = '';
+
+    list.map((item) => {
+      const keywordItem = document.createElement('li');
+      keywordItem.innerHTML = item.text;
+      keywordList.appendChild(keywordItem);
+    });
+    $target.appendChild(keywordList);
   };
 
-  const handleRemove = () => {
-    $input.value = '';
-  };
-
-  $input.addEventListener('input', debounce(handleSearch, 400));
-  $button.addEventListener('click', handleRemove);
+  const handleFocus = (e) => {};
 
   $inputContainer.appendChild($input);
   $target.appendChild($inputContainer);
