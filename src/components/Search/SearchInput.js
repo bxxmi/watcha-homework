@@ -15,29 +15,25 @@ export default function SearchInput({ $target }) {
   $input.placeholder = '제목, 감독, 배우로 검색';
   $button.innerText = '지우기';
 
-  $input.addEventListener('keyup', (e) => handleInput(e));
-  $input.addEventListener('keydown', (e) => handleFocus(e));
+  $input.addEventListener('keyup', (e) => handleKeyEvent(e));
 
-  const handleInput = (e) => {
-    if (
-      e.key === 'ArrowDown' ||
-      e.key === 'ArrowUp' ||
-      e.key === 'ArrowLeft' ||
-      e.key === 'ArrowRight' ||
-      e.key === 'CapsLock'
-    ) {
-      return;
-    } else {
-      const inputText = e.target.value;
-      handleRequest(inputText);
-
-      $inputContainer.appendChild($button);
-
-      $button.addEventListener('click', () => {
-        $input.value = '';
-        keywordList.innerHTML = '';
-      });
+  const handleKeyEvent = (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      handleFocus(e.key);
+    } else if (e.target.value) {
+      handleInput(e.target.value);
     }
+  };
+
+  const handleInput = (keyword) => {
+    handleRequest(keyword);
+
+    $inputContainer.appendChild($button);
+
+    $button.addEventListener('click', () => {
+      $input.value = '';
+      keywordList.innerHTML = '';
+    });
   };
 
   // fetch 요청
@@ -64,8 +60,6 @@ export default function SearchInput({ $target }) {
     $target.appendChild(keywordList);
   };
 
-  const handleFocus = (e) => {};
-
   $input.addEventListener('blur', () => {
     $target.removeChild(keywordList);
   });
@@ -73,6 +67,8 @@ export default function SearchInput({ $target }) {
   $input.addEventListener('focus', () => {
     $target.appendChild(keywordList);
   });
+
+  const handleFocus = (e) => {};
 
   $inputContainer.appendChild($input);
   $target.appendChild($inputContainer);
