@@ -49,7 +49,6 @@ export default function SearchInput({ $target }) {
     }
 
     const result = await requestKeyword(keyword);
-    console.log(result);
     handleAutoComplete(result);
   }, 400);
 
@@ -66,6 +65,14 @@ export default function SearchInput({ $target }) {
   };
 
   const handleFocus = (e) => {};
+
+  $input.addEventListener('blur', () => {
+    $target.removeChild(keywordList);
+  });
+
+  $input.addEventListener('focus', () => {
+    $target.appendChild(keywordList);
+  });
 
   $inputContainer.appendChild($input);
   $target.appendChild($inputContainer);
