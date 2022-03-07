@@ -20,7 +20,7 @@ export default function SearchInput({ $target }) {
   const handleKeyEvent = (e) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       handleFocus(e.key);
-    } else if (e.target.value) {
+    } else {
       handleInput(e.target.value);
     }
   };
@@ -38,6 +38,7 @@ export default function SearchInput({ $target }) {
 
   // fetch 요청
   const handleRequest = debounce(async (keyword) => {
+    console.log(keyword);
     if (!keyword) {
       $inputContainer.removeChild($button);
       keywordList.innerHTML = '';
@@ -68,7 +69,17 @@ export default function SearchInput({ $target }) {
     $target.appendChild(keywordList);
   });
 
-  const handleFocus = (e) => {};
+  // const handleFocus = (e) => {
+  //   const first = keywordList.firstElementChild;
+  //   const last = keywordList.lastElementChild;
+
+  //   if (!this.current) {
+  //     if (e.key === 'ArrowDown') {
+  //       this.current = first;
+  //     }
+  //   }
+  //   this.current.className = styles.focus;
+  // };
 
   $inputContainer.appendChild($input);
   $target.appendChild($inputContainer);
