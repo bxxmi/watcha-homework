@@ -4,83 +4,73 @@ import { debounce } from '../../utils/debounce';
 
 export default function SearchInput({ $target }) {
   const $inputContainer = document.createElement('div');
+  const $ResultContainer = document.createElement('div');
   const $input = document.createElement('input');
-  const $button = document.createElement('button');
-  const keywordList = document.createElement('ul');
 
-  keywordList.className = styles.list_container;
+  // div 클래스명 지정
+  $ResultContainer.className = styles.list_container;
   $inputContainer.className = styles.input_container;
 
+  // 인풋 태그, 버튼 설정
   $input.type = 'text';
   $input.placeholder = '제목, 감독, 배우로 검색';
-  $button.innerText = '지우기';
 
-  $input.addEventListener('keyup', (e) => handleKeyEvent(e));
+  // 로직 시작
+  $input.addEventListener('keyup', async (e) => {
+    const selectedKeyword = $ResultContainer.querySelector(
+      `li.${styles.selected}`,
+    );
 
-  const handleKeyEvent = (e) => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      handleFocus(e.key);
-    } else {
-      handleInput(e.target.value);
-    }
-  };
+    if (e.target.value.length > 0 && !selectedKeyword) {
+      const list = await requestKeyword(e.target.value);
+      console.log(list);
 
-  const handleInput = (keyword) => {
-    handleRequest(keyword);
+      $ResultContainer.innerHTML = '';
 
-    $inputContainer.appendChild($button);
+      const $ul = document.createElement('ul');
 
-    $button.addEventListener('click', () => {
-      $input.value = '';
-      keywordList.innerHTML = '';
-    });
-  };
-
-  // fetch 요청
-  const handleRequest = debounce(async (keyword) => {
-    console.log(keyword);
-    if (!keyword) {
-      $inputContainer.removeChild($button);
-      keywordList.innerHTML = '';
-      return;
+      list.map((item) => {
+        const $li = document.createElement('li');
+        $li.textContent = `${item.text}`;
+        $ul.appendChild($li);
+      });
+      $ResultContainer.appendChild($ul);
+      $ResultContainer.style.display = 'block';
     }
 
-    const result = await requestKeyword(keyword);
-    handleAutoComplete(result);
-  }, 400);
+    if (e.target.value.length === 0) {
+      $ResultContainer.innerHTML = '';
+    }
 
-  // 추천 검색어 함수
-  const handleAutoComplete = (list) => {
-    keywordList.innerHTML = '';
+    const keywordList = $ResultContainer.querySelectorAll('li');
 
-    list.map((item) => {
-      const keywordItem = document.createElement('li');
-      keywordItem.innerHTML = item.text;
-      keywordList.appendChild(keywordItem);
-    });
-    $target.appendChild(keywordList);
-  };
+    if (
+      (e.key === 'ArrowUp' || e.key === 'ArrowDown') &&
+      $ResultContainer.style.display === 'block'
+    ) {
+      let target;
 
-  $input.addEventListener('blur', () => {
-    $target.removeChild(keywordList);
+      const initIndex = e.key === 'ArrowUp' ? keywordList.length - 1 : 0;
+
+      const sibling =
+        selectedKeyword &&
+        (e.key === 'ArrowUp'
+          ? selectedKeyword.previousElementSibling
+          : selectedKeyword.nextElementSibling);
+
+      if (sibling) {
+        target = sibling;
+      } else {
+        target = keywordList.item(initIndex);
+      }
+      selectedKeyword && selectedKeyword.classList.remove(styles.selected);
+      target.classList.add(styles.selected);
+
+      $input.value = target.textContent;
+    }
   });
-
-  $input.addEventListener('focus', () => {
-    $target.appendChild(keywordList);
-  });
-
-  // const handleFocus = (e) => {
-  //   const first = keywordList.firstElementChild;
-  //   const last = keywordList.lastElementChild;
-
-  //   if (!this.current) {
-  //     if (e.key === 'ArrowDown') {
-  //       this.current = first;
-  //     }
-  //   }
-  //   this.current.className = styles.focus;
-  // };
 
   $inputContainer.appendChild($input);
   $target.appendChild($inputContainer);
+  $target.appendChild($ResultContainer);
 }
