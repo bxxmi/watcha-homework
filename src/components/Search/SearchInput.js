@@ -13,7 +13,7 @@ export default function SearchInput({ $target }) {
 
   $input.type = 'text';
   $input.placeholder = '제목, 감독, 배우로 검색';
-  $button.innerText = '지우기';
+  $button.innerText = 'X';
   $button.style.display = 'none';
 
   // 로직 시작
