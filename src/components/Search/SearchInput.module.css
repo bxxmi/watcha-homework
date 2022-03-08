@@ -35,6 +35,19 @@ button {
   padding: 0px 42px;
 }
 
+.list_container > p {
+  font-size: 30px;
+  text-align: center;
+  color: white;
+  padding: 30px 0px;
+  background-color: #222326;
+  border-radius: 8px;
+}
+
+.list_container > p > .bold {
+  color: #f82f62;
+}
+
 .list_container > ul {
   background-color: #222326;
   padding: 30px;
