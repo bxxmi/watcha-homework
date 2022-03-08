@@ -3,74 +3,106 @@ import { requestKeyword } from '../../utils/api';
 import { debounce } from '../../utils/debounce';
 
 export default function SearchInput({ $target }) {
-  const $inputContainer = document.createElement('div');
-  const $ResultContainer = document.createElement('div');
+  const inputContainer = document.createElement('div');
+  const resultContainer = document.createElement('div');
   const $input = document.createElement('input');
+  const $button = document.createElement('button');
 
-  // div 클래스명 지정
-  $ResultContainer.className = styles.list_container;
-  $inputContainer.className = styles.input_container;
+  resultContainer.className = styles.list_container;
+  inputContainer.className = styles.input_container;
 
-  // 인풋 태그, 버튼 설정
   $input.type = 'text';
   $input.placeholder = '제목, 감독, 배우로 검색';
+  $button.innerText = '지우기';
+  $button.style.display = 'none';
 
   // 로직 시작
   $input.addEventListener('keyup', async (e) => {
-    const selectedKeyword = $ResultContainer.querySelector(
+    const selectedKeyword = resultContainer.querySelector(
       `li.${styles.selected}`,
     );
 
-    if (e.target.value.length > 0 && !selectedKeyword) {
-      const list = await requestKeyword(e.target.value);
-      console.log(list);
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      handleFocus(e.key, selectedKeyword);
+    } else {
+      handleRequest(e.target.value, selectedKeyword);
+    }
+  });
 
-      $ResultContainer.innerHTML = '';
-
+  // 데이터 요청 로직
+  const handleRequest = debounce(async (keyword, element) => {
+    if (keyword.length > 0 && !element) {
+      const keywordList = await requestKeyword(keyword);
       const $ul = document.createElement('ul');
 
-      list.map((item) => {
+      resultContainer.innerHTML = '';
+
+      keywordList.map((item) => {
         const $li = document.createElement('li');
-        $li.textContent = `${item.text}`;
+        $li.innerText = `${item.text}`;
         $ul.appendChild($li);
       });
-      $ResultContainer.appendChild($ul);
-      $ResultContainer.style.display = 'block';
+
+      resultContainer.style.display = 'block';
+      resultContainer.appendChild($ul);
+
+      $button.style.display = 'block';
     }
 
-    if (e.target.value.length === 0) {
-      $ResultContainer.innerHTML = '';
+    if (keyword.length === 0) {
+      resultContainer.innerHTML = '';
+      $button.style.display = 'none';
     }
+  }, 300);
 
-    const keywordList = $ResultContainer.querySelectorAll('li');
+  // 포커스 로직
+  const handleFocus = (arrowKey, element) => {
+    const keywordList = resultContainer.querySelectorAll('li');
 
     if (
-      (e.key === 'ArrowUp' || e.key === 'ArrowDown') &&
-      $ResultContainer.style.display === 'block'
+      (arrowKey === 'ArrowUp' || arrowKey === 'ArrowDown') &&
+      resultContainer.style.display === 'block'
     ) {
       let target;
+      const initIndex = arrowKey === 'ArrowUp' ? keywordList.length - 1 : 0;
 
-      const initIndex = e.key === 'ArrowUp' ? keywordList.length - 1 : 0;
+      const siblingElement =
+        element &&
+        (arrowKey === 'ArrowUp'
+          ? element.previousElementSibling
+          : element.nextElementSibling);
 
-      const sibling =
-        selectedKeyword &&
-        (e.key === 'ArrowUp'
-          ? selectedKeyword.previousElementSibling
-          : selectedKeyword.nextElementSibling);
-
-      if (sibling) {
-        target = sibling;
+      if (siblingElement) {
+        target = siblingElement;
       } else {
         target = keywordList.item(initIndex);
       }
-      selectedKeyword && selectedKeyword.classList.remove(styles.selected);
+      element && element.classList.remove(styles.selected);
       target.classList.add(styles.selected);
 
       $input.value = target.textContent;
     }
+  };
+
+  // 포커스 없어질 때
+  $input.addEventListener('blur', () => {
+    resultContainer.style.display = 'none';
   });
 
-  $inputContainer.appendChild($input);
-  $target.appendChild($inputContainer);
-  $target.appendChild($ResultContainer);
+  // 포커스 생길 때
+  $input.addEventListener('focus', () => {
+    resultContainer.style.display = 'block';
+  });
+
+  $button.addEventListener('click', () => {
+    $input.value = '';
+    resultContainer.innerHTML = '';
+
+    $button.style.display = 'none';
+  });
+
+  inputContainer.appendChild($button);
+  inputContainer.appendChild($input);
+  $target.appendChild(inputContainer);
+  $target.appendChild(resultContainer);
 }
