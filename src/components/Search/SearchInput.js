@@ -37,11 +37,19 @@ export default function SearchInput({ $target }) {
 
       resultContainer.innerHTML = '';
 
-      keywordList.map((item) => {
-        const $li = document.createElement('li');
-        $li.innerText = `${item.text}`;
-        $ul.appendChild($li);
-      });
+      if (keywordList.length === 0) {
+        $ul.style.display = 'none';
+
+        const $p = document.createElement('p');
+        $p.innerHTML = `검색하신 <b class=${styles.bold}>'${keyword}'</b>를 찾지 못했어요 🥲`;
+        resultContainer.appendChild($p);
+      } else {
+        keywordList.map((item) => {
+          const $li = document.createElement('li');
+          $li.innerText = `${item.text}`;
+          $ul.appendChild($li);
+        });
+      }
 
       resultContainer.style.display = 'block';
       resultContainer.appendChild($ul);
@@ -55,7 +63,6 @@ export default function SearchInput({ $target }) {
     }
   }, 300);
 
-  // 포커스 로직
   const handleFocus = (arrowKey, element) => {
     const keywordList = resultContainer.querySelectorAll('li');
 
@@ -84,21 +91,18 @@ export default function SearchInput({ $target }) {
     }
   };
 
-  // 포커스 없어질 때
   $input.addEventListener('blur', () => {
     resultContainer.style.display = 'none';
   });
 
-  // 포커스 생길 때
   $input.addEventListener('focus', () => {
     resultContainer.style.display = 'block';
   });
 
   $button.addEventListener('click', () => {
     $input.value = '';
-    resultContainer.innerHTML = '';
-
     $button.style.display = 'none';
+    resultContainer.innerHTML = '';
   });
 
   inputContainer.appendChild($button);
