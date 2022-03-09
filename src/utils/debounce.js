@@ -1,3 +1,5 @@
+'use strict';
+
 export const debounce = (func, time) => {
   let timer;
 
