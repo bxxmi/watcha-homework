@@ -1,5 +1,7 @@
 # watcha-homework
 
+#### 🔗 배포 링크 : https://search-watcha.netlify.app/
+
 * [파일 구조](#파일-구조)
 * [구현 사항](#구현-사항)
 * [커밋 컨벤션](#커밋-컨벤션)
@@ -8,6 +10,35 @@
 ![screen-recording](https://user-images.githubusercontent.com/56878724/157223513-67ebaf06-236d-4449-8a2d-d668e79bfe8d.gif)
 
 ### 파일 구조
+
+```
+📦src
+ ┣ 📂components
+ ┃ ┣ 📂Header
+ ┃ ┃ ┣ 📜Header.js
+ ┃ ┃ ┗ 📜Header.module.css
+ ┃ ┗ 📂Search
+ ┃ ┃ ┣ 📜SearchContent.js
+ ┃ ┃ ┣ 📜SearchContent.module.css
+ ┃ ┃ ┣ 📜SearchInput.js
+ ┃ ┃ ┗ 📜SearchInput.module.css
+ ┣ 📂images
+ ┃ ┗ 📜logo.png
+ ┣ 📂styles
+ ┃ ┗ 📜GlobalStyle.module.css
+ ┣ 📂utils
+ ┃ ┣ 📜api.js
+ ┃ ┗ 📜debounce.js
+ ┣ 📜App.js
+ ┗ 📜index.js
+```
+
+* <b>`components`</b> : UI 요소를 관리하는 폴더입니다.
+* <b>`components/Header`</b> : header 컴포넌트를 관리하는 폴더입니다.
+* <b>`components/Search`</b> : search 컴포넌트를 관리하는 폴더입니다.
+* <b>`images`</b> : image 파일을 관리하는 폴더입니다.
+* <b>`styles`</b> : 글로벌 스타일을 관리하는 폴더입니다.
+* <b>`utils`</b> : 프로젝트 진행 중 필요한 기능들을 모듈화해서 관리하는 폴더입니다.
 
 ### 구현 사항
 
