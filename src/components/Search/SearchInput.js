@@ -16,7 +16,25 @@ export default function SearchInput({ $target }) {
   $button.innerText = 'X';
   $button.style.display = 'none';
 
-  // 로직 시작
+  inputContainer.appendChild($button);
+  inputContainer.appendChild($input);
+  $target.appendChild(inputContainer);
+  $target.appendChild(resultContainer);
+
+  $input.addEventListener('blur', () => {
+    resultContainer.style.display = 'none';
+  });
+
+  $input.addEventListener('focus', () => {
+    resultContainer.style.display = 'block';
+  });
+
+  $button.addEventListener('click', () => {
+    $input.value = '';
+    $button.style.display = 'none';
+    resultContainer.innerHTML = '';
+  });
+
   $input.addEventListener('keyup', async (e) => {
     const selectedKeyword = resultContainer.querySelector(
       `li.${styles.selected}`,
@@ -29,7 +47,6 @@ export default function SearchInput({ $target }) {
     }
   });
 
-  // 데이터 요청 로직
   const handleRequest = debounce(async (keyword, element) => {
     if (keyword.length > 0 && !element) {
       const keywordList = await requestKeyword(keyword);
@@ -70,7 +87,7 @@ export default function SearchInput({ $target }) {
       (arrowKey === 'ArrowUp' || arrowKey === 'ArrowDown') &&
       resultContainer.style.display === 'block'
     ) {
-      let target;
+      let currentTarget;
       const initIndex = arrowKey === 'ArrowUp' ? keywordList.length - 1 : 0;
 
       const siblingElement =
@@ -80,33 +97,14 @@ export default function SearchInput({ $target }) {
           : element.nextElementSibling);
 
       if (siblingElement) {
-        target = siblingElement;
+        currentTarget = siblingElement;
       } else {
-        target = keywordList.item(initIndex);
+        currentTarget = keywordList.item(initIndex);
       }
       element && element.classList.remove(styles.selected);
-      target.classList.add(styles.selected);
+      currentTarget.classList.add(styles.selected);
 
-      $input.value = target.textContent;
+      $input.value = currentTarget.textContent;
     }
   };
-
-  $input.addEventListener('blur', () => {
-    resultContainer.style.display = 'none';
-  });
-
-  $input.addEventListener('focus', () => {
-    resultContainer.style.display = 'block';
-  });
-
-  $button.addEventListener('click', () => {
-    $input.value = '';
-    $button.style.display = 'none';
-    resultContainer.innerHTML = '';
-  });
-
-  inputContainer.appendChild($button);
-  inputContainer.appendChild($input);
-  $target.appendChild(inputContainer);
-  $target.appendChild(resultContainer);
 }
