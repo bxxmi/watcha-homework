@@ -96,11 +96,12 @@ export default function SearchInput({ $target }) {
           ? element.previousElementSibling
           : element.nextElementSibling);
 
-      if (siblingElement) {
-        currentTarget = siblingElement;
-      } else {
-        currentTarget = keywordList.item(initIndex);
+      {
+        siblingElement
+          ? (currentTarget = siblingElement)
+          : (currentTarget = keywordList.item(initIndex));
       }
+
       element && element.classList.remove(styles.selected);
       currentTarget.classList.add(styles.selected);
 
