@@ -1,15 +1,13 @@
 # watcha-homework
 
 * [파일 구조](#파일-구조)
-* [사용한 기술 스택과 이유](#사용한-기술-스택과-이유)
 * [구현 사항](#구현-사항)
+* [커밋 컨벤션](#커밋-컨벤션)
 * [실행 방법](#실행-방법)
 
 ![screen-recording](https://user-images.githubusercontent.com/56878724/157223513-67ebaf06-236d-4449-8a2d-d668e79bfe8d.gif)
 
 ### 파일 구조
-
-### 사용한 기술 스택과 이유
 
 ### 구현 사항
 
@@ -24,6 +22,18 @@
 - [X] 요소 명확성을 위해 시맨틱 태그 활용 `ex) <header>, <main>`
 - [X] sessionStorage를 통해 api 응답 캐싱  
 - [X] debounce 적용
+
+### 커밋 컨벤션
+
+```
+docs: 문서 작업
+style: 주석 추가, 간단한 코드 추가 및 수정, 스타일링
+refactor: 코드 리팩토링 
+feat: 기능 구현 및 추가
+conf: 프로젝트 환경 설정
+chore: package.json 관련
+fix: 오류 해결
+```
 
 ### 실행 방법
 
