@@ -69,7 +69,7 @@ button {
 }
 
 .list_container > ul > li:hover,
-.list_container > ul > li.selected {
+.list_container > ul > li.focus {
   background-color: #323436;
   color: white;
 }

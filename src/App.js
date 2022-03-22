@@ -3,11 +3,11 @@ import Header from './components/Header/Header';
 import SearchContent from './components/Search/SearchContent';
 
 export default function App({ $target }) {
-  const container = document.createElement('div');
-  container.className = 'container';
+  const $header = document.createElement('header');
+  const $main = document.createElement('main');
 
-  $target.appendChild(container);
+  $target.append($header, $main);
 
-  new Header({ $target: container });
-  new SearchContent({ $target: container });
+  Header({ $target: $header });
+  SearchContent({ $target: $main });
 }

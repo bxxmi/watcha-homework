@@ -2,7 +2,6 @@ import styles from './SearchContent.module.css';
 import SearchInput from './SearchInput';
 
 export default function SearchContent({ $target }) {
-  const $main = document.createElement('main');
   const $h1 = document.createElement('h1');
   const textContainer = document.createElement('div');
 
@@ -11,8 +10,7 @@ export default function SearchContent({ $target }) {
   textContainer.className = styles.text_container;
 
   textContainer.appendChild($h1);
-  $main.appendChild(textContainer);
-  $target.appendChild($main);
+  $target.appendChild(textContainer);
 
-  new SearchInput({ $target: $main });
+  new SearchInput({ $target });
 }
